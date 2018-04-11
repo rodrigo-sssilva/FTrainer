@@ -1,0 +1,89 @@
+Frame/Screen number reference for the FP Trainer
+
+Aqua Tunnel (Character locked, any character is changed to Milla)
+16 - First screen
+17 - Miniboss, transition, pipes
+18 - Ascent
+19 - Poison water, boss
+
+Dragon Valley
+20 - First screen
+21 - Geysers, miniboss, transition
+22 - Waterfalls
+23 - Boss (game prevents custom warps in the middle of the room)
+
+Relic Maze
+24 - First screen
+25 - Switches room (Modified to always begin at yellow door. Not available for any other kind of custom warp)
+26 - Miniboss, transition
+27 - Shell Turtles, 
+28 - Any x pos > 2800 triggers the boss fight
+
+Fortune Night
+29 - First screen
+30 - Stairs
+31 - Miniboss
+32 - Mall entry
+33 - Mall, 2nd miniboss
+34 - Boss
+
+Sky Battalion
+35 - Main ship; use the default warp if you just want the boss fight
+36 - Fire Ship
+37 - Metal Ship
+38 - Earth Ship
+
+Jade Creek
+39 - First screen
+40 - Bubbles
+41 - Leaf platforms, miniboss, submarine entry
+42 - Submarine - Has a forced modification on global cycles to make a specific strat easier to practice.
+43 - Rain, boss (Any x pos > 10000 triggers the boss fight)
+
+Thermal Base
+44 - First screen
+45 - Flames, Boxes
+46 - Squid, miniboss
+47 - Transition
+48 - Crushers
+49 - Boss
+
+Pangu Lagoon (Character locked, any character is changed to Lilac)
+50 - First Screen
+51 - Wall climb, blue spiky enemies
+52 - Wall break, shields, transition
+53 - Wasp corridor
+54 - Block Maze
+55 - Descent, boss (Any warp into the boss room triggers it, but doesn't pause igt like usual)
+
+Trap Hideout (Character locked, Lilac is changed to Carol)
+56 - First screen
+57 - Many new enemies, Barrels
+58 - Tower, miniboss, sprint maze, boss
+
+Shmup
+84 - Shmup
+
+Battle Glacier
+59 - First screen
+60 - Hangbars, maze
+61 - Drills
+62 - Transition, miniboss, rotating platforms
+63 - Switches
+64 - Boss
+
+Final Dreadnought 1
+65 - First screen
+66 - Airlocks, boss (Any x pos > 15000 triggers the boss fight)
+
+Final Dreadnought 2
+67 - First screen
+68 - Oxigen, tower, boss (use the default warp to do the boss fight without the oxigen disable)
+
+Final Dreadnought 3
+69 - First screen
+70 - Hallway, boss
+
+Final Dreadnought 4
+71 - First screen (The laser room is on the same frame. if you want just that section, try out the custom warp(71,2000,1700)) and walk forward.
+72 - Last bosses (is not available for custom warping, but available through default warps)

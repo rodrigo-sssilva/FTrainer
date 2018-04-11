@@ -1,0 +1,49 @@
+Available input file header choices:
+
+character *value or name* = your character choice. Recognizeable names are *lilac*,*carol*,*carolbike* and *milla*. Alternatively, 0,2,3,4
+difficulty *name* = your game difficulty choice. Recognizeable names are *hard*, *normal* , *easy* and *casual*. Alternatively, 0,1,2,3
+warp *none or false* = disables warping
+warp *value from 1 to 14*  = default warp
+warp custom *screen id* 0 = custom warp at the beginning of a screen
+warp custom *screen id* *posX* *posY* = custom warp at some point not at the beginning
+shield *integer from 1 to 5 representing type* *integer from 1 to 3 representing health* = shield on warp
+globalcycle *integer value* = initial global cycle upon warp
+speedX *value* = initial horizontal speed if inputs are unlocked
+speedY *value* = initial vertical speed if inputs are unlocked
+seed *integer value or false* = initial RNG value
+unlock *true(default) or false* = enable/disable input unlock upon warp. Only works for custom warps
+
+The following options are only available for custom warp settings:
+timer frame *value* = activates Timer Stop and adds frame *value* as a rule.
+timer posx *value* = activates Timer Stop and adds posX *value* as a rule.
+timer check *value* = activates Timer Stop and adds checkpoint flag *value* as a rule.
+timerlimit *value* = activates Timer Limit with *value* as a goal time.
+timerlimitpb = toggles "Automatically change to personal best"
+
+The following options are only available for playback settings:
+playfromstart *game path* *game version* = opens the game on specified path and starts TASing it. Recognizeable names are *1.20.4*,*1.21.4* or *1.21.5*. Alternatively, 1,2,3
+extend *true(default) or false* = turn on or off the option to extend the counter after playback
+pause *false or a number* = pause at frame x or turn it off 
+speed *integer from 1 to 5* = initial playback speed. The value corresponds to the speed changer's list box index.
+inputs = stop setting up and begin playback. Mandatory at the end, except if none of the options above are available.
+
+If the first word doesn't match 0, 1 or first words above, the line will be treated as commentary.
+
+Though not required, setting undesireable values as false is recommended, because it will avoid settings from a previous file from being applied and affect playback.
+
+Inputs:
+1 = perform the input
+0 or . = don't perform the input
+Use the line "pause" to automatically pause a playback.
+Use the line "speed n" to automatically change the playback's speed. n must be an integer from 1 to 5, corresponding to the speed changer's list box index. 
+Use the line "end" or an empty line to force a playback to end.
+Anything else is treated as commentary.
+Line format: a b c d e f g h (0 or 1 for each letter)
+a = up 
+b = down
+c = left
+d = right
+e = jump
+f = action
+g = special
+h = pause

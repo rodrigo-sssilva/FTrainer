@@ -1,0 +1,2 @@
+require("defines")
+require("changeHotKeyKeys")

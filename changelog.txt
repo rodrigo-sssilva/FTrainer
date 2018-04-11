@@ -1,0 +1,331 @@
+FTrainer Changelog
+
+
+Known 3.3.4 issues:
+- Speedhack often fails to work for speed increase. This seems to be a Cheat Engine compatibility issue with the game.
+The best workaround is to close and open the trainer until it works.
+- The Center Camera option will very likely make TAS playbacks desynch, because many enemy triggers use the camera position, and not the player position.
+- Carol's double jump cancels instantly when Improved Movement is toggled, and untoggling the mod doesn't undo this.
+- Milla's blocks granted from the special item hotkey will use the last assigned sprite to it, which can be a super shield, or a burst at its end. It's a visual bug; the block is still there, working as normal.
+
+
+Version 3.4, wip
+- Added tools for gameplay recording.
+- Added a fastforward feature to playbacks. The game will skip drawing and play as fast as possible until it's paused or the playback ends.
+You can toggle it by adding "fastforward" to the playback settings.
+- Pause at frame x is now "Fast Forward to x", which means fastforward will be automatically enabled when the checkbox is marked.
+- The trainer only supports version 1.21.5 from now on.
+- RNG seed from playbacks is now applied one frame after the playback transition, instead of at the same time.
+This means rng updates before transition won't affect the playback anymore.
+- Fixed a bug where the igt change would not be applied when the game was attached from the title screen.
+
+
+Version 3.3.4, released at 09/01/2018
+- Added an option to save custom warp settings into a file. Open the advanced custom warp window and press the save button.
+Press the load button or drag the file to the main trainer window to immediately apply the changes.
+There are settings that only apply to custom warps, like timerstop settings, and settings that only apply to playbacks. Make sure to read the updated InputFileReference.
+- Dragging files to the trainer now automatically does the corresponding action given on the first line.
+"commands" means the file is for key bindings, "playback" means it's for TAS playbacks, "customwarp" means it's a custom warp config file.
+- The commands list has been rearranged to better position recently implemented items. If you use a commands file, it'll very likely be incorrect, so please redo and save it.
+- Some default command keys have been changed to reflect the above change. Special Item was moved to E, Input Unlocked is unassigned by default, Explode is now T.
+- Added an option on misc tab to give the player 9 keycards automatically, in any screen that uses it. 1.21.5 only.
+- You can now use . instead of 0 to represent non inputs on playback files.
+- The Open Timer Stop button has been moved to the Custom Warps tab, since it depends entirely on custom warps for effectiveness.
+- To reflect the change above, the Display and Misc tabs have changed positions.
+- Advanced Dataview now uses a 4 decimal digits rounding, to reflect the rounding the game uses internally. The normal dataview now uses a single digit rounding to make it easier to read.
+- Reattaching the game now automatically activates all previously toggled mods, as long as the 1.21.5 version is the one used.
+- The Randomly Explode trigger now checks if the game is not paused before being activated.
+- Fixed a bug that caused a game crash when a super boost empowered kick caused damage after disabling the enemy health display.
+- Fixed a bug where timer stop conditions would not be immediately activated when toggled while timer stop was already active.
+- Fixed a bug where the frame count would not be displayed correctly if a playback ended with a frame advance.
+
+
+Version 3.3.3, released at 21/12/2017
+- Changed the FD1 Boss default warp to give the player max initial speed and as close as possible from the boss trigger without starting it during fadein.
+- Added extra options to timer stop. You can now set a time limit to reach the goal and get punished by exploding if you fail.
+Automatically Change to Personal Best changes the time limit to the time set when it stopped.
+- Added to the display the options Net SpeedX and Net SpeedY. They calculate and display your speed through the difference of current frame and previous frame's positions, instead of the in-game speed value.
+- Added the display option Bigger Speed. It shows the biggest absolute value between speedX or speedY
+- Added to the RNG Counter an option to skip camera and player related updates, that run every frame. This means only the other RNG updates would be counted.
+- Fixed playbacks to enforce not pressed inputs, which means the player's button presses mid playback won't affect it anymore.
+- Fixed a playback bug where frame and line count would be displayed incorrectly.
+- Added hint texts to several objects.
+
+
+Version 3.3.2, released at 26/07/2017
+- Added to the advanced custom warp options a toggle to start the stage with the Special Item hotkey instantly triggered. This excludes Carol's special item since it can already be selected elsewhere.
+It'll only take effect if Unlock Inputs Upon Warp is toggled.
+All changes listed below, except the last 4, only apply to 1.21.5.
+- Once again, the trainer's pointers have been updated to support the latest 1.21.5 release.
+- Added a new tab dedicated to misc settings related to the display, due to the addition of many more settings, listed below.
+Display Position lets you choose where you want the crystals display to be placed on screen (in pixels). Keep in mind the game window limits are 426x240.
+Hide Lives Display hides the health and crystal icons on the HUD.
+Show Value now includes multiple choices for values to be displayed instead of the crystal count. The available options are:
+SpeedX * 10 (the one included before), SpeedY * 10, Angle, Position X, Position Y, Shield Health, Bike Health, Invincibility, Crystal Count (see below)
+Display Health is a separate toggle, still mututally exclusive with the others.
+- Added a new window dedicated to extra custom warp options. The available options are:
+Selecting the speed granted to the player as soon as the input unlock from custom warps happens.
+Selecting initial global cycle
+Selecting a specific initial meter. Keep in mind the hud movement from fadein prevents meter regen, so it's recommended to manually add 16 to the initial meter for an accurate result.
+Copying current game values to text fields. Read above about meter.
+All options are tied to the respectives checkbox toggles, and they are set up alongside the custom warp buttons on the main form.
+- Added the misc option Improved Movement. It makes the characters' general movement increase with crystals and orbs collected. Recommended to use alongside superdog mode.
+The rates are flat 0.5% increase per crystal and 2% per orb.
+Note that the speed caps also scale with crystals and orbs. This doesn't obsolete superdog mode, because they are still finite, and air drag is still a factor.
+- Added the misc option Remove Invincibility. It removes invincibility from moves and crystal, and reduces the invincibility frames from damage taken from 60 to 8.
+Recommended to use alongside Instant Death for a more challenging casual playthrough.
+- The Special Item hotkey now has a function for Milla. It'll instantly give her a complete block. It'll use the wrong sprite depending on what action was done before the hotkey was pressed, but the block is still there.
+- All warps done from the trainer are now synched with the game's framerate. This means the stat changes won't occasionally be done out of synch and ruin the warp setup, like
+the timer advancing one frame before the warp, timer stop being instantly triggered, input unlock and fadein skip not working sometimes, etc.
+- Added to Timer Stop the option to use the checkpoint flag as a rule.
+- Added to the RNG Calculator an option to count how many times the RNG is updated in-game. Should be useful for synchronizing RNG seeds between playback files.
+To use it, mark the checkbox to start the counter and unmark it to stop.
+- Changed the odds for the Random Explode toggle to 1/10000 per frame.
+- Changed the random calculations of the Random Explode toggle to use the script's RNG, instead of the game's RNG.
+
+
+Version 3.3.1, released at 25/06/2017
+- Added new options to the misc settings tab.
+Show Speed on Screen disables the crystal counter on the HUD and shows instead (current horizontal speed * 10), truncated. Negative speed values are turned into positive for the display.
+Show Health on Screen displays instead the current health of the last enemy hit, truncated.
+Activating one option will automatically deactivate the other, and vice versa.
+- Changed Superdog Mode to remove the upper boundary position lock. This means you can move upwards infinitively, if this option is enabled.
+- When closed, the trainer will now deactivate all settings that required code injection.
+- Removed the restriction on the Speed Boost hotkey that prevented it from working when the game was paused, or the player was stopped.
+- Reduced the Speed Boost hotkey cooldown to 200ms.
+
+
+Version 3.3, released at 12/06/2017
+- Added a new tab dedicated to misc settings. It allows to customize the stats the refill hotkey does and the speed the boost hotkey gives.
+It also includes toggles for bonus options:
+Center Camera manipulates the camera to center it at the character at every moment. Should be helpful with practicing and TASing some bosses.
+Lock Timer freezes the in-game timer at 10:00.00, in case gameplay without time pressure/comparison is wanted.
+Randomly Explode adds a random chance to trigger the explode hotkey (explained later).
+Superdog mode removes speed caps and air drag, along other minor changes, for ultra fasts.
+Instant Death makes every attack taken explode the character, every shield damage taken explode the character and every invincibility shield explode the character.
+Limited Lives and GameOver redirects the game over screen straight to the main menu, so lives actually matter in the game. It also limits maximum amount of lives to 4.
+All toggles, except for Lock Timer, are 1.21.5 only.
+- Added the hotkey "Explode", which makes the character instantly die and explode in feathers. It's not binded by default; must be changed on the commands tab.
+- Updated the Frame Reference File to attempt to describe screens better.
+- Fixed a bug where selecting a default warp from screen 0 (galaxytrail cutscene) performed a custom warp instead.
+- Fixed extended playback line right after a playback is over not being counted.
+- Added the option to choose the shmup sequence from a custom warp. The frame number is 84.
+Use the posX parameter 0 to start from the beginning, or use any other value to start from the miniboss.
+
+
+Version 3.2.5, released at 18/05/2017
+- Game version 1.21.5 has been recently updated, so the trainer has been updated to support it.
+- Added the option to open the game through the trainer and TAS it right away. Full game TASes are an option now!
+- Fixed some pointers from 1.20.4.
+
+
+Version 3.2.4, released at 21/04/2017
+- The trainer now supports the recently released version 1.21.5!
+- Added a function and a hotkey to repeat the last used warp. This is useful when default warps are used a lot, alongside custom warps
+- Improved the RNG counter's efficiency.
+- Added a new loop setting to the RNG counter. You can set a value you look for and a loop bigger than 1 will stop before ending if a partial result matches that value.
+- The dataview now displays the checkpoint flag, next to the current frame.
+
+
+Version 3.2.3, released at 31/03/2017
+- Added a window for a small RNG calculator. It allows you to see the future and past values attributed to it after given amount of updates.
+This will be helpful to synchronize RNG values through playback files, because screen transitions may not update it the same amount of times.
+- Changed custom warps to screen 48 with input unlock activated. They now set the water level to its original state.
+- Fixed a bug where commentary lines would not be counted properly when a playback was restarted while paused.
+- Added back display of both line counters when a playback ends.
+- Added support to header settings "health" (initial health upon warp), "meter" (initial speed upon warp), and "speed" (initial playback speed).
+
+
+Version 3.2.2, released at 10/03/2017
+- Fixed the bug where warp attributions would not be applied correctly when done from the starting screen.
+- Finished attributing all pointers for version 1.20.4. Unfortunately, choosing the RNG seed is not possible yet, so beware of running RNG reliant playbacks from 1.21.4 on 1.20.4.
+- Changed the forced global cycle change when warping to the start of frame 42 (JC submarine) to only be applied through "Set at the beginning of frame".
+This means it can be manipulated through "Set with specified values" and input file headers.
+- Minor text changes.
+
+
+Version 3.2.1, released at 07/03/2017
+- Added the option to pause a playback through the own input file. Use the line "pause" to do it.
+- Added the option to change the game's difficulty through the input file header. Use the line "difficulty* *name* to do it.
+- Added the option to choose the character through the input file header by her name, instead of ID. Use *lilac*, *carol*, *carolbike* and *milla* instead of the number.
+- Fixed a bug where the line counter wasn't being updated properly during an extended playback.
+
+
+Version 3.2, released at 06/03/2017
+- The trainer can now read playback settings and apply them before starting playback. These are the available options:
+Character, Default Warp, Custom Warp, Shield for custom warp, Global Cycle, RNG seed, Input Unlock, Extend Frame Counter, Pause on line.
+Check out InputFileReference.txt to learn how to use them.
+Note that playback files without these settings (just 0s and 1s) still work as usual.
+- Due to this new change, the line counter will now be different from the frame counter most of the time. When this happens, the status text and dataview playback counter will show both values.
+Pause at frame will use the text line as the reference, and was renamed to Pause at Line for this reason.
+- The input unlock option now makes the in-game time start to run as soon as inputs are unlocked, instead of waiting for the HUD movement to end.
+- The option to continue the frame counter at the end of a playback is now toggeable. It's also possible to manipulate it with input file settings.
+- Fixed several playback bugs caused by changing files during an ongoing playback, both paused and not paused.
+- Fixed (hopefully) all occasions of "Attempt to use closed file" message errors.
+- Lots of minor text changes.
+
+
+Version 3.1, released at 01/03/2017
+- Added an advanced dataview display. It opens a new window that shows a lot more information than the old dataview tab.
+Click the Update button to use it or the checkbox to make it constantly active when the dataview is turned on, instead of the old one.
+Note that the old dataview, with 4 displays, still works as usual. If the new window's checkbox is active, however, the old datavew won't be updated alongside the new one.
+Opening the new window from the dataview tab forces the checkbox to be active. Opening it from the Tools tab forces it to be turned off.
+The window is always updated when opened, or when a playback is paused or frame advanced.
+- Added options to choose the playback's initial RNG seed. If the checkbox is unmarked, no seed will be applied, but the one active at the moment will fill the field.
+- The debugger breakpoint is now set up as soon as the game is attached to the trainer, and is active the entire time. This means secondary effects of some default warps and "Unlock Inputs upon Warp" are now truly consistent.
+- Added the option to use the Tools button display to control the game even when it's not paused. Just mark its corresponding checkbox.
+- Due to these Tool tab additions, the tab's interface has been rearranged, to leave all control buttons at the top and available playback options at the bottom.
+- Added the option to change the game speed to 0.25x
+- The Tools status bar now continues the frame counter at the end of a playback, instead of stopping it, to make future inputs easier to calculate. Use the "Stop" button to interrupt it.
+- Fixed a bug where restarting a playback while the current one was paused would sometimes make it freak out and crash the game.
+- Fixed a bug where the "pause at frame" option wouldn't work if the field was left empty.
+
+
+Version 3.0.1, released at 20/02/2017
+- Bike Switch has been replaced by Special Item. The hotkey has a new functionality depending on the chosen character.
+For Lilac, the hotkey grants you a charge of Super Dragon Boost and refills your meter. There's nothing for Milla yet.
+- Changed the script's cooldown after warps to not be applied when used through playbacks, which fixes some bugs and makes playbacks faster.
+- The "Unlock inputs after warp" function for custom warps will now skip the fadein and delay after warp. This significantly speeds up warps.
+- Custom warps won't save Input Unlock status with the custom warp configuration. This means toggling input unlock on/off just depends on the checkbox.
+- Changed the TB boss, FD1 Boss, Dreadbox and FD2 boss default warps to skip the fadein process after the warp.
+- The FD1 boss default warp starting position has been moved to the right to adapt to the change above.
+- Changed the FD2 boss default warp starting position. Combined with changes above, the fight starts way faster now, and without the oxigen lock.
+- Changed the brevon1 default warp to instantly move the character straight to the anti-gravity below the arena, right after warping.
+- Moved the SB main ship screen to the first screens list. This means custom warping to its beginning defaults to 0 meter.
+- Custom warping to the SB main ship screen now resets global flags.
+- Multiple text changes for the new changes.
+
+
+Version 3.0, released at 26/01/2017
+- The trainer now has a TASing tool! Good luck pushing the game to absolute perfection!
+The TASing tool features pause (process), frame advance with chosen inputs and file playback.
+You can give the trainer a file with n lines with 8 numbers on each - 0 or 1 - and it'll run the corresponding inputs on each in-game frame.
+It uses this order:
+Up | Down | Left | Right | Jump | Action | Special | Start
+You can set one of the 15 warp functions (14 default warps and the currently set up custom warp) as a starting point.
+You can ask the playback to automatically pause on a specified frame.
+- Added new hotkeys for the new TASing tools. Start Playback, Pause, Frame Advance and Stop. They are all unassigned by default.
+- Added speed change options, through CE speedhack. Supported speed modifiers are 0.5x, 1x (default), 2x and 5x
+- Added hotkeys for speeding the game up or down. They are also unassigned by default.
+- Fixed the default custom warp's starting meter.
+- Changed the commands table default text for "Switch Bike" to "Bike Switch". It's spelled "Bike Switch" everywhere else.
+- Removed the popup message that appears when the game could not be attached. It's not necessary anymore.
+
+
+
+Version 2.8.3, released at 19/01/2017
+- Adjusted the FD1 boss warp to delay more the input unlock, so it wouldn't conflict with the boss' camera lock
+- Fixed a bug that introduced on the last version where reattaching the game process would fail.
+- Warps to frame 24 now reset the global flags for the switches room.
+- Fixed global cycle saving through custom warps.
+
+
+Version 2.8.2, released at 14/01/2017
+- Fixed the Carol bike health refill for 1.21.4
+- Fixed a bug where the currently detected version wasn't being displayed.
+- Removed the "Generate Default Key Values File" function because it has been obsoleted since previous versions.
+- The trainer now verifies if the attached game's window is on top before applying any hotkey, instead of the checkboxes.
+- Removed the checkboxes at the bottom and the toggle hotkey to adapt to the change above.
+
+
+Version 2.8.1, released at 01/01/2017
+- The Brevon2 default warp now resets the boss RNG seed on 1.20.4, so the boss' pattern will be always the same as the first encounter upon game launch.
+- The refill stats hotkey now heals Carol's bike as well (3 health)
+- Fixed a bug where Carol bikes generated through the hotkey would have 1 health if the player took hits before.
+- If you assign a letter or number to custom warp, the trainer shows a message to warn you about following the same restrictions as default warps.
+- Several text changes to configuration options, for clarity.
+- The trainer won't show a process opening failure message upon launch. Looked unnecessary on that occasion.
+- I broke the dataview on 2.8. It's fixed now.
+- The "common key for custom warp" verification now includes NumPad numbers.
+- Changed "Instant Warp" texts to "Instant Move", to make its function more clear.
+- The Key Configuration Table now shows the currently assigned key for each function. Any modification to a key binding updates the table.
+- It's possible to not bind a hotkey to any key, just in case.
+- Fixed a bug where opening the trainer with a 1.21.4 version game opened would not display the currently recognized version.
+
+
+Version 2.8, released at 30/12/2016
+- The trainer now supports both 1.20.4 and 1.21.4 game versions. It'll recognize the current version and change the pointers accordingly.
+A text at the top right will indicate the current version being recognized. It'll be empty if the game wasn't found.
+- Attempted to fix the input unlock upon first warp into a room not working. It'll still probably fail for the very first warp of the game/trainer.
+- Thank you again, Dazl, for finding the only pointer I couldn't for 1.20.4.
+
+
+Version 2.7.1, released at 27/12/2016
+- Added an option to save the key configuration into a file, to be later loaded. It follows the same format as the default file.
+It's not possible to save multi key bindings yet.
+- Fixed the default warp texts at the Default tab to reflect the new inclusions. How did I forget that D:
+- If you assign a letter or number for a custom key, it'll look for the default warp checkbox before doing the warp. I added this to prevent accidental warps while typing.
+- Non-warp commands will ensure you won't accidentally submit cheated times by adding 10 minutes to the timer, if it's not over 10 minutes.
+- The FD3 Boss Fight custom warp now grants you a fire shield with 1 hit. It's usually how you do this fight. If you want to do it without a shield, use custom warps.
+
+
+Version 2.7, released at 25/12/2016
+- There are way too many hotkeys now, so I present you a tab dedicated to custom hotkeys! Double click an item on the list to reassign a key or combination. You can also revert to the default config with a button click.
+The Checkboxes toggle hotkey (shift+tab) cannot be redefined for now.
+- You can load a predefined key config by sending a key values file to trainer. I'll link the default file below.
+- Click the Generate Default File button to create a file that contains the default values and instructions.
+- An option to save input files will come soon.
+- Changed the first text at the instructions tab because you don't need to open the game before the trainer anymore.
+- Added new 3 default warps: TB Boss, FD2 Boss and FD3 Boss. To make up space for that, the default keys used are:
+1,2,3,4,5,6,7,8,9,0,-,=,O,P
+- Rearranged default warp keys based on the inclusions above.
+- Changed the Dreadbox warp to spawn you at the bottom, right next to the plant on a position it can't hit you.
+- Added Input Unlock to the FD1 Boss and Dreadbox default warps.
+- Fixed a bug where closing the game (or crashing it D:) with the dataview active would cause a message flood.
+- The trainer runs a tick of the dataview update as soon as you start it, to make it feel more responsive.
+
+
+Version 2.6.2, released at 21/12/2016
+- The trainer now retries to attach to the game if it doesn't recognize it at first (for example, you reopened the game without closing the trainer).
+If it fails again (game not opened, wrong version or some other random thing named "FP.exe"), a proper error message is displayed, warning you of the issue.
+- Dail1 warp was moved to screen entry (jumping back into the main ship).
+- The Instant Move hotkey was moved to OEM_5 (\| on most keyboards).
+- A small bugfix with the custom shield HP list.
+- The update status button now updates the textfields even it a frame not on the list was used. This could be  helpful for some segments, like the DV boss room.
+- Switched the order of the 2 first command items on the list. Makes more sense for me somehow.
+
+
+Version 2.6.1, released at 16/12/2016
+- New misc hotkey: use ' to go to a specific location pointed by the custom warp text fields, without reloading the screen.
+If the key is different because of region keyboards, please tell me.
+- Hover over the custom warp status text to view info about the remaining stats.
+- Updated default warps that go into checkpoint-locked frames to make restarting spawn the player at the end of the previous screen.
+
+
+Version 2.6, released at 16/12/2016
+- Replaced the lake glide default warp by Dail1 because I finally figured it out!
+- Using the custom warp to go to frame 25 (RM switches room) resets the switches status, so it makes the room easier to practice
+- Vertical speeds between 0 and 4 (where speed decay acts) turn its dataview color blue.
+- The checkboxes at the bottom are better aligned.
+
+
+Version 2.5.1, released at 12/12/2016
+- All warps update the crystal counter at the top to 400, and all non warp hotkeys update it to 450.
+- Shift + Tab toggles both checkboxes at the bottom. If only one of them are on, both are turned off
+
+
+Version 2.5, released at 09/12/2016
+- The trainer is now useful for all 3 avaiable characters. Choose a character on the box at the top and use a warp to apply the change.
+- If you are playing carol, use the R hotkey to switch between bike and bikeless carol instantly.
+- Moved the input lock hotkey to T.
+- Included the Carol and Milla stages to the available warp list. Note that the game still applies character locks to exclusive stages.
+- Milla still sucks on 1.21.4 ;-;
+
+
+Version 2.45 of the trainer, released at 08/12/2016
+- You can remove the input lock for cutscenes now. Either use the R hotkey or set your custom warps do to this automatically.
+- Non warp hotkeys use letters, so I added a checkbox to toggle them.
+- Upgraded the custom warp status text to display the current set up custom warp.
+
+
+Version 2.4.4 of the trainer, released at 01/12/2016
+- Swapped the order of custom and dataview tabs.
+- New hotkey: Press W to instantly get max speed! You must have the game unpaused and not be standing still.
+- All non-warp hotkeys set the remaining crystal count to 400. This is done to explicitly show a cheat was used.
+
+
+Version 2.4.3 of the trainer, released at 27/11/2016
+- Warps to room 25 (RM switches, but only through the doors) and 35 (SB main ship) are allowed.
+- You can press Q to instantly refill meter and health.
+- Starting stages from the very beginning also resets global cycles. (Please don't submit ILs exploiting this)
+- Setting checkpoint on current position (now current state) also updates the warp's shield stats.
