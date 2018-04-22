@@ -2297,9 +2297,9 @@ function debugger_onBreakpoint()
                writeDouble(addr2,5 * mult)
             end
             addr2 = addr+0x108
-            if readDouble(addr2) ~=0 and readDouble(addr2) < 15 * mult then
-               writeDouble(addr2,15 * mult)
-            end
+            --if readDouble(addr2) ~=0 and readDouble(addr2) < 15 * mult then
+            writeDouble(addr2,15 * mult)
+            --end
             addr2 = addr+0x110
             if readDouble(addr2) ~=0 then
                writeDouble(addr2,0.07375 * mult)
