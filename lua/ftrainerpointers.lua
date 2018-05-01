@@ -71,5 +71,3 @@ varInputAttack = "[[[fp.exe+14D2458]+288]+14]+118"
 varInputSpecial = "[[[fp.exe+14D2458]+288]+14]+120"
 varInputPause = "[[[fp.exe+14D2458]+288]+14]+128"
 
---Misc options pointers
-miscSpeedCaps = {"","",{"FP.exe+23F04A","FP.exe+239DEA","FP.exe+23F146"}}

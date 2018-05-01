@@ -8,7 +8,6 @@ require("changeHotKeyKeys")
 require("ftrainerpointers")
 
 
-
 --Current game version being recognized/prioritized.
 postWarpCode = 0
 FPVersion = 0
@@ -479,7 +478,7 @@ function HotkeyWarp13()
          writeDouble(varCheckX, 2496)
          writeDouble(varCheckY, 306)
          writeInteger(varGotoFrame, 72)
-         if FPVersion == 1 then writeInteger(varBossSeed,0) end
+         --if FPVersion == 1 then writeInteger(varBossSeed,0) end
          --inputBreakpointIsActive = inputBreakpointIsActive + 10
 end
 
@@ -1008,7 +1007,6 @@ end
 
 --returns currently recognized game version index. 0 means no game recognized.
 function readGameVersion()
-         i = NumFPVersion
          if not isempty(readInteger(varGlobalCycle)) then return 3 end
          return 0
 
@@ -2503,7 +2501,7 @@ function applyPostWarp()
             end
 
             --sets dreadbox's drop to be an explosion instead of crystals
-            if (customFrame == 67 or postWarpCode == 9) and FPVersion == 3 then
+            if (customFrame == 67 or postWarpCode == 9) then
                writeDouble(varBoxExplode,9)
             end
             --fixes water level
@@ -2946,11 +2944,11 @@ function UpdateAdvancedDataview()
             setProperty(FTrainerDataview.CELabel12,"Caption","Meter: " .. dataMeter)
             setProperty(FTrainerDataview.CELabel12,"Visible",true)
          else setProperty(FTrainerDataview.CELabel12,"Visible",false) end
-         if not isempty(dataSeed) and FPVersion ~= 1 then
+         if not isempty(dataSeed) then
             setProperty(FTrainerDataview.CELabel13,"Caption","RNG value: " .. dataSeed)
             setProperty(FTrainerDataview.CELabel13,"Visible",true)
          else setProperty(FTrainerDataview.CELabel13,"Visible",false) end
-         if inputPlaybackLines > 0 and FPVersion ~= 1 then
+         if inputPlaybackLines > 0 then
             setProperty(FTrainerDataview.CELabel14,"Caption","Initial RNG value: " .. dataFirstSeed)
             setProperty(FTrainerDataview.CELabel14,"Visible", true)
          else
@@ -3154,7 +3152,7 @@ end
 
 --toggles permanent keycards
 function ToggleKeycard()
-         if ReattachFP(0) == 0 or FPVersion ~= 3 then
+         if ReattachFP(0) == 0 then
             setProperty(FTrainerMain.CECheckbox22,"Checked",false)
             return
          end
@@ -3191,7 +3189,7 @@ end
 
 miscLivesDisplay = false
 function ToggleLivesDisplay()
-         if ReattachFP(1) == 0 or FPVersion ~= 3 then
+         if ReattachFP(1) == 0 then
             setProperty(FTrainerMain.CECheckbox20,"Checked",false)
             return
          end
@@ -3204,7 +3202,7 @@ end
 
 --toggles superdog mode: fest
 function ToggleSuperdog()
-         if ReattachFP(1) == 0 or FPVersion ~= 3 then
+         if ReattachFP(1) == 0 then
             setProperty(FTrainerMain.CECheckbox10,"Checked",false)
             return
          end
@@ -3322,7 +3320,7 @@ end
 
 --Explodes randomly depending on RNG
 function ToggleRandomExplode()
-         if ReattachFP(1) == 0 or FPVersion ~= 3 then
+         if ReattachFP(1) == 0 then
             setProperty(FTrainerMain.CECheckbox9,"Checked",false)
             return
          end
@@ -3331,7 +3329,7 @@ end
 
 --Instant Death yay
 function ToggleInstantDeath()
-         if ReattachFP(1) == 0 or FPVersion ~= 3 then
+         if ReattachFP(1) == 0 then
             setProperty(FTrainerMain.CECheckbox11,"Checked",false)
             return
          end
@@ -3393,7 +3391,7 @@ function ToggleInstantDeath()
 end
 
 function ToggleLimitedLives()
-         if ReattachFP(0) == 0 or FPVersion ~= 3 then
+         if ReattachFP(0) == 0 then
             setProperty(FTrainerMain.CECheckbox12,"Checked",false)
             return
          end
@@ -3416,7 +3414,7 @@ end
 
 
 function ToggleCameraLock()
-         if ReattachFP(1) == 0 or FPVersion ~= 3 then
+         if ReattachFP(1) == 0 then
             setProperty(FTrainerMain.CECheckbox13,"Checked",false)
             return
          end
@@ -3492,7 +3490,7 @@ miscSpeedScreenDisplay2 = 3
 
 
 function ShowSpeedOnScreen()
-         if ReattachFP(1) == 0 or FPVersion ~= 3 then
+         if ReattachFP(1) == 0 then
             setProperty(FTrainerMain.CECheckbox13,"Checked",false)
             return
          end
@@ -3820,7 +3818,7 @@ end
 
 miscHud = false
 function MiscHUD()
-         if ReattachFP(1) == 0 or FPVersion ~= 3 then
+         if ReattachFP(1) == 0 then
             setProperty(FTrainerMain.CECheckbox15,"Checked",false)
             return
          end
@@ -3833,7 +3831,7 @@ end
 miscMovement = false
 
 function ToggleMiscMovement()
-         if ReattachFP(1) == 0 or FPVersion ~= 3 then
+         if ReattachFP(1) == 0 then
             setProperty(FTrainerMain.CECheckbox16,"Checked",false)
             return
          end
@@ -4216,6 +4214,25 @@ function ToggleMiscMovement()
                divsd xmm0,[FP.exe+12C35D0] //=200
                addsd xmm0,[fp.exe+12E4658] //=0.2
                jmp exitmovement26
+
+               //lilac cyclone gravity change
+               alloc(movement27,128)
+               label(exitmovement27)
+               "fp.exe"+260B48:
+               jmp movement27
+               nop
+               nop
+               nop
+               exitmovement27:
+               movement27:
+               movsd xmm2,[FP.exe+1488F80] //orbs
+               mulsd xmm2,[fp.exe+12BEAD0] //=4
+               addsd xmm2,[FP.exe+1488F58] //crystals
+               mulsd xmm2,[fp.exe+12E4958] //=0.15
+               divsd xmm2,[FP.exe+12C35D0] //=200
+               addsd xmm2,[fp.exe+12E4958] //=0.15
+               subsd xmm0,xmm2
+               jmp exitmovement27
             ]])
          else
             autoAssemble([[
@@ -4283,6 +4300,9 @@ function ToggleMiscMovement()
                dealloc(movement26)
                "fp.exe"+26E381:
                movsd xmm0,[fp.exe+12E4658]
+               dealloc(movement26)
+               "fp.exe"+260B48:
+               subsd xmm0,[fp.exe+12E4958]
             ]])
             --undoes numbers changes
             local addr = readInteger(varAVs)
@@ -4328,7 +4348,7 @@ end
 miscHealthScreen = false
 
 function ShowHealthOnScreen()
-         if ReattachFP(1) == 0 or FPVersion ~= 3 then
+         if ReattachFP(1) == 0 then
             setProperty(FTrainerMain.CECheckbox16,"Checked",false)
             return
          end
@@ -4479,7 +4499,7 @@ end
 
 --toggle to remove invincibility from moves
 function ToggleInvincibility()
-         if ReattachFP(0) == 0 or FPVersion ~=3 then
+         if ReattachFP(0) == 0 then
             miscInvincibility = false
             setProperty(FTrainerMain.CECheckbox21,"Checked",false)
             return
