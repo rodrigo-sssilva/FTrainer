@@ -21,10 +21,11 @@ timerlimit *value* = activates Timer Limit with *value* as a goal time.
 timerlimitpb = toggles "Automatically change to personal best"
 
 The following options are only available for playback settings:
-playfromstart *game path* *game version* = opens the game on specified path and starts TASing it. Recognizeable names are *1.20.4*,*1.21.4* or *1.21.5*. Alternatively, 1,2,3
+playfromstart *game path* = opens the game on specified path and starts TASing it.
 extend *true(default) or false* = turn on or off the option to extend the counter after playback
-pause *false or a number* = pause at frame x or turn it off 
+pause *false or a number* = pause at frame x or turn it off
 speed *integer from 1 to 5* = initial playback speed. The value corresponds to the speed changer's list box index.
+fastforward = toggles fast-foward mode, which plays the game as fast as possible without drawing until the playback ends or a pause line is hit.
 inputs = stop setting up and begin playback. Mandatory at the end, except if none of the options above are available.
 
 If the first word doesn't match 0, 1 or first words above, the line will be treated as commentary.
@@ -35,11 +36,11 @@ Inputs:
 1 = perform the input
 0 or . = don't perform the input
 Use the line "pause" to automatically pause a playback.
-Use the line "speed n" to automatically change the playback's speed. n must be an integer from 1 to 5, corresponding to the speed changer's list box index. 
+Use the line "speed n" to automatically change the playback's speed. n must be an integer from 1 to 5, corresponding to the speed changer's list box index.
 Use the line "end" or an empty line to force a playback to end.
 Anything else is treated as commentary.
 Line format: a b c d e f g h (0 or 1 for each letter)
-a = up 
+a = up
 b = down
 c = left
 d = right
