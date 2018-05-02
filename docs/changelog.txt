@@ -1,22 +1,27 @@
 FTrainer Changelog
 
 
-Known 3.3.4 issues:
+Known 3.4 issues:
 - Speedhack often fails to work for speed increase. This seems to be a Cheat Engine compatibility issue with the game.
 The best workaround is to close and open the trainer until it works.
+- When opening a file for overwriting, the tool doesn't prompt an overwrite warning alert like it's configured to do.
 - The Center Camera option will very likely make TAS playbacks desynch, because many enemy triggers use the camera position, and not the player position.
 - Carol's double jump cancels instantly when Improved Movement is toggled, and untoggling the mod doesn't undo this.
 - Milla's blocks granted from the special item hotkey will use the last assigned sprite to it, which can be a super shield, or a burst at its end. It's a visual bug; the block is still there, working as normal.
 
 
-Version 3.4, wip
-- Added tools for gameplay recording.
+Version 3.4, released at 02/05/2018
+- Added tools for gameplay recording. The game will load the selected warp and record your inputs into a file that can be played back later.
+It supports both game inputs and tool inputs, and pause/frame advance are supported.
 - Added a fastforward feature to playbacks. The game will skip drawing and play as fast as possible until it's paused or the playback ends.
+- The game pause tool has been revamped to skip updating internal values. This means the in-game music won't be paused and the CE debugger window won't pop up anymore.
 You can toggle it by adding "fastforward" to the playback settings.
 - Pause at frame x is now "Fast Forward to x", which means fastforward will be automatically enabled when the checkbox is marked.
 - The trainer only supports version 1.21.5 from now on.
 - RNG seed from playbacks is now applied one frame after the playback transition, instead of at the same time.
 This means rng updates before transition won't affect the playback anymore.
+- Added to the Improved Movement mod a Multiplier to Lilac cyclone's gravity reduction.
+- Fixed a bug on the Improved Movement mod where new warps would lock the horizontal speed cap to 0.
 - Fixed a bug where the igt change would not be applied when the game was attached from the title screen.
 
 
