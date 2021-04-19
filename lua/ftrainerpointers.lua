@@ -1,5 +1,6 @@
 --Used addresses
 --1.21.5
+varBase = "fp.exe+14D2458"
 varTrueX = "[[[fp.exe+14D2458]+1ba8]+14]+1a8"
 varTrueY = "[[[fp.exe+14D2458]+1ba8]+14]+1b0"
 varCharacter = "[[fp.exe+14D2458]+109e0]+8"
@@ -49,7 +50,7 @@ varCrystalPosX = "[[fp.exe+14D2458]+d88]+4"
 varCrystalPosY = "[[fp.exe+14D2458]+d88]+8"
 varLivesDisplay = "[[fp.exe+14D2458]+2d68]+8"
 varLivesDisplay2 = "[[fp.exe+14D2458]+2488]+8"
-varDrawing = "[fp.exe+14D2458]+109dc"
+varDrawing = "[fp.exe+14D2458]+109d8"
 varJump = "[[[fp.exe+14D2458]+21e8]+14]+f0"
 varJump2 = "[[[fp.exe+14D2458]+31c8]+14]+f8"
 varBoxExplode = "[[[FP.exe+14C01FC]+40]+14]+100"
@@ -71,3 +72,9 @@ varInputAttack = "[[[fp.exe+14D2458]+288]+14]+118"
 varInputSpecial = "[[[fp.exe+14D2458]+288]+14]+120"
 varInputPause = "[[[fp.exe+14D2458]+288]+14]+128"
 
+--Misc options pointers
+miscSpeedCaps = {"","",{"FP.exe+23F04A","FP.exe+239DEA","FP.exe+23F146"}}
+
+--addresses for hit breakpoints and corresponding modifying registers
+hitBreakPoints = {{"FP.exe+2B11F8","esi"},{"FP.exe+2B0123","ecx"},{"FP.exe+2AF818","esi"},{"FP.exe+2B2625","esi"},{"FP.exe+2B224B","esi"},{"FP.exe+2B29FD","esi"},{"FP.exe+2AEE0A","esi"},{"FP.exe+2B06B5","esi"},{"FP.exe+2B0A6D","esi"},{"FP.exe+2B0F74","esi"}}
+hitBreakPointsIndex = nil

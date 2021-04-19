@@ -11,7 +11,7 @@ require("ftrainerpointers")
 --Current game version being recognized/prioritized.
 postWarpCode = 0
 FPVersion = 0
-FPTrainerTitle = "FTrainer 3.4"
+FPTrainerTitle = "FTrainer 3.5 WIP"
 
 RandomExplodeRate = 10000 --used on the random explode toggle
 
@@ -19,7 +19,7 @@ RandomExplodeRate = 10000 --used on the random explode toggle
 -- FirstFrames contains first screen numbers of the stages, and FollowFrames does the same for other screens.
 -- This separation is important for certain attributions on custom warps.
 arrayFirstFrames = {16,20,24,29,35,39,44,50,56,59,65,67,69,71}
-arrayFollowFrames = {17,18,19,21,22,23,25,26,27,28,30,31,32,33,34,36,37,38,40,41,42,43,45,46,47,48,49,51,52,53,54,55,57,58,60,61,62,63,64,66,68,70,84}
+arrayNextFrames = {17,18,19,21,22,23,25,26,27,28,30,31,32,33,34,36,37,38,40,41,42,43,45,46,47,48,49,51,52,53,54,55,57,58,60,61,62,63,64,66,68,70,84}
 
 -- Minor functions for general use
 
@@ -46,6 +46,7 @@ end
 function Round4(num)
          return math.floor(10000*num + 0.5)/10000
 end
+
 -- For the extra button hotkeys (at the bottom)
 setGlobalKeyPollInterval(100)
 VK_OEM_MINUS = 189
@@ -105,7 +106,7 @@ end
 
 -- Toggles the dataview on and off, based on the refresh timer activation
 function CEButton1Click()
-    if ReattachFP(1) == 0 then return end
+    if ReattachFP(0) == 0 then return end
     if(FTrainerMain.CETimer1.getEnabled()==false) then
         setProperty(FTrainerMain.CEButton1, "Caption", "Stop Dataview")
         FTrainerMain.CETimer1.setEnabled(true)
@@ -146,6 +147,9 @@ end
 function CETimer1Timer()
          --workaround for the message flood issue
          --at the same time checks if the advanced dataview should be updated instead
+         if getProperty(FTrainerObject.CECheckbox1,"Checked") then
+             UpdateObjectDataview()
+         end
          if isempty(readInteger(varGlobalCycle)) or
             getProperty(FTrainerDataview.CECheckbox1,"Checked")
          then
@@ -164,45 +168,45 @@ function CETimer1Timer()
             end
             return
          end
-
-         displayPosX = readDouble(varTrueX)
-         displayPosY = readDouble(varTrueY)
-         displaySpeed = readDouble(varSpeedX)
-         displaySpeedY = readDouble(varSpeedY)
-         if (isempty(displayPosX))
-         then
-              setProperty(FTrainerMain.labelPosX,"Caption", "Pos X: 0.0")
-         else
-              setProperty(FTrainerMain.labelPosX,"Caption", "Pos X: " .. Round1(displayPosX))
-         end
-         if (isempty(displayPosY))
-         then
-              setProperty(FTrainerMain.labelPosY,"Caption", "Pos Y: 0.0")
-         else
-              setProperty(FTrainerMain.labelPosY,"Caption", "Pos Y: " .. Round1(displayPosY))
-         end
-         if (isempty(displaySpeed))
-         then
-              setProperty(FTrainerMain.labelSpeed,"Caption", "Speed: 0.0")
-         else
-              --Changes the text color to red if the player reaches the speed cap
-              setProperty(FTrainerMain.labelSpeed,"Caption", "Speed: " .. Round1(displaySpeed))
-              if(displaySpeed>=15 or displaySpeed<=-15) then
-                   FTrainerMain.labelSpeed.Font.Color = 0x0000ff
-              else  FTrainerMain.labelSpeed.Font.Color = 0x000000 end
-         end
-         if (isempty(displaySpeedY) or displaySpeedY == 0)
-         then
-              setProperty(FTrainerMain.labelSpeedY,"Caption", "YSpeed: 0.0")
-         else
-              --Changes the text color to red if the player reaches the speed cap
-              setProperty(FTrainerMain.labelSpeedY,"Caption", "YSpeed: " .. -1*Round1(displaySpeedY))
-              if(displaySpeedY>=15 or displaySpeedY<=-15) then
-                   FTrainerMain.labelSpeedY.Font.Color = 0x0000ff
-              else if (displaySpeedY>-4 and displaySpeedY < 0) then
-                   FTrainerMain.labelSpeedY.Font.Color = 0xff0000
-              else  FTrainerMain.labelSpeedY.Font.Color = 0x000000 end
-         end end
+         if getProperty(FTrainerDataview.CECheckbox1,"Checked") == false then
+             displayPosX = readDouble(varTrueX)
+             displayPosY = readDouble(varTrueY)
+             displaySpeed = readDouble(varSpeedX)
+             displaySpeedY = readDouble(varSpeedY)
+             if (isempty(displayPosX))
+             then
+                  setProperty(FTrainerMain.labelPosX,"Caption", "Pos X: 0.0")
+             else
+                  setProperty(FTrainerMain.labelPosX,"Caption", "Pos X: " .. Round1(displayPosX))
+             end
+             if (isempty(displayPosY))
+             then
+                  setProperty(FTrainerMain.labelPosY,"Caption", "Pos Y: 0.0")
+             else
+                  setProperty(FTrainerMain.labelPosY,"Caption", "Pos Y: " .. Round1(displayPosY))
+             end
+             if (isempty(displaySpeed))
+             then
+                  setProperty(FTrainerMain.labelSpeed,"Caption", "Speed: 0.0")
+             else
+                  --Changes the text color to red if the player reaches the speed cap
+                  setProperty(FTrainerMain.labelSpeed,"Caption", "Speed: " .. Round1(displaySpeed))
+                  if(displaySpeed>=15 or displaySpeed<=-15) then
+                       FTrainerMain.labelSpeed.Font.Color = 0x0000ff
+                  else  FTrainerMain.labelSpeed.Font.Color = 0x000000 end
+             end
+             if (isempty(displaySpeedY) or displaySpeedY == 0)
+             then
+                  setProperty(FTrainerMain.labelSpeedY,"Caption", "YSpeed: 0.0")
+             else
+                  --Changes the text color to red if the player reaches the speed cap
+                  setProperty(FTrainerMain.labelSpeedY,"Caption", "YSpeed: " .. -1*Round1(displaySpeedY))
+                  if(displaySpeedY>=15 or displaySpeedY<=-15) then
+                       FTrainerMain.labelSpeedY.Font.Color = 0x0000ff
+                  else if (displaySpeedY>-4 and displaySpeedY < 0) then
+                       FTrainerMain.labelSpeedY.Font.Color = 0xff0000
+                  else  FTrainerMain.labelSpeedY.Font.Color = 0x000000 end
+             end end end
 end
 
 
@@ -215,7 +219,7 @@ end
 
 --argument is 1 if the checkbox verification should be ignored. 0 otherwise.
 function HotkeyWarpGeneral(a)
-         --if ReattachFP(1) == 0 then return 0 end
+         --if ReattachFP(0) == 0 then return 0 end
          if not compareTopWindow() then return 0 end
          -- if the player is on a frame where everything is unitialized (just started the game),
          -- warp to the time attack screen first.
@@ -478,7 +482,7 @@ function HotkeyWarp13()
          writeDouble(varCheckX, 2496)
          writeDouble(varCheckY, 306)
          writeInteger(varGotoFrame, 72)
-         --if FPVersion == 1 then writeInteger(varBossSeed,0) end
+         if FPVersion == 1 then writeInteger(varBossSeed,0) end
          --inputBreakpointIsActive = inputBreakpointIsActive + 10
 end
 
@@ -527,12 +531,12 @@ customAdvancedMeter = 0
 
 -- Sets checkpoint at the beginning of current screen, as if the player is just entering it
 function HotkeyWarpCustom1()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          t = readInteger(varFrame)
          h = 0
 
          if(has_value(arrayFirstFrames,t)== true) then h = 1 end
-         if(has_value(arrayFollowFrames,t)== true) then h = 2 end
+         if(has_value(arrayNextFrames,t)== true) then h = 2 end
 
          if(h == 0) then
               setProperty(FTrainerMain.CustomStatus,"Caption","Cannot set checkpoint on frame " .. t)
@@ -576,11 +580,11 @@ end
 
 -- Sets custom checkpoint at current player position.
 function HotkeyWarpCustom2()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          t = readInteger(varFrame)
          h = 0;
          if(has_value(arrayFirstFrames,t)== true) then h = 1 end
-         if(has_value(arrayFollowFrames,t)== true) then h = 2 end
+         if(has_value(arrayNextFrames,t)== true) then h = 2 end
          if (h==0) then
              setProperty(FTrainerMain.CustomStatus,"Caption","Cannot set checkpoint on frame " .. t)
              setProperty(FTrainerMain.CustomStatus,"ShowHint", false)
@@ -614,11 +618,11 @@ end
 
 -- Sets custom checkpoint with values chosen on editboxes
 function HotkeyWarpCustom3()
-         if ReattachFP(1) == 0 then return false end
+         if ReattachFP(0) == 0 then return false end
          t = tonumber(getProperty(FTrainerMain.BCustomFrame,"Text"))
          h = 0;
          if has_value(arrayFirstFrames,t) then h = 1 end
-         if has_value(arrayFollowFrames,t) then h = 2 end
+         if has_value(arrayNextFrames,t) then h = 2 end
          --if has_value(arrayToolFrames,t) then h = 3 end
          if h==0 then
              setProperty(FTrainerMain.CustomStatus,"Caption","Cannot set checkpoint on frame " .. t)
@@ -855,7 +859,7 @@ end
 --Preliminary testing and attributions before any misc hotkey function
 function MiscButtonGeneral()
          --if(checkbox_getState(FTrainerMain.CECheckbox3) == 0) then
-         if ReattachFP(1) == 0 then return 0 end
+         if ReattachFP(0) == 0 then return 0 end
          if not compareTopWindow() then
              return 0
          end
@@ -928,6 +932,7 @@ function SpecialItem()
 end
 
 --Instantly moves the character to the position selected by the custom warp coordinates
+-- TODO: make number validation checks
 function InstantMove()
          if MiscButtonGeneral() == 0 then return end
          writeDouble(varTrueX, getProperty(FTrainerMain.BCustomX,"Text"))
@@ -940,7 +945,8 @@ function ExplodeForNoReason()
          TriggerExplode()
 end
 
-
+--retrieves the trainer's directory
+ftrainerDirectory = nil
 --test for pointers to see if the game is opened.
 -- 1 if the game was properly recognized, 0 otherwise
 -- parameters: 0 if the script should not show an error message, 1 otherwise
@@ -948,12 +954,30 @@ end
 function ReattachFP(m)
          if playbackFromStart then return 1 end
 
+         --TODO: find a way to get the directory without opening extremely suspicious command line window
+         if m == 1 then
+             ftrainerDirectory = TrainerOrigin
+             if isempty(ftrainerDirectory) then
+                 ftrainerDirectory = io.popen"cd":read'*l'
+             end
+         end
+
          if not isempty(readInteger(varGlobalCycle)) then
             return 1
          end
-         openProcess("FP.exe")
+         --before attempting to open any fp.exe on the list, go for
+         --the fp.exe that's on the same directory as ftrainerDirectory
+         --isGameOpenedOnFolder checks if the trainer is on the game's root folder and attempts to open it.
+         isGameOpenedOnFolder = false
+         --if getOpenedProcessID() == 0 then
+             openProcess("FP.exe")
+         --end
+         if not isempty(ftrainerDirectory) and getOpenedProcessID() == 0 then
+            createProcess(ftrainerDirectory .. "FP.exe",nil,false,false)
+            isGameOpenedOnFolder = true
+         end
          if getOpenedProcessID() == 0 then FPVersion = 0
-         else FPVersion = readGameVersion() end
+         else FPVersion = readGameVersion(isGameOpenedOnFolder) end
          if FPVersion == 0 then
             --if m == 1 then showMessage("Could not recognize the game.") end
             setProperty(FTrainerMain,"Caption",FPTrainerTitle .. " (not attached to game)")
@@ -970,10 +994,15 @@ function ReattachFP(m)
 
              --put new setbreakpoint here!!
 
-             --note: putting this here miight slow the game down a lot
-             --debug_setBreakpoint(varBossSeed,8,bptWrite,updateRNGCounter)
              -- reapplies currently selected mods
              if FPVersion == 3 then
+                -- refresh index dictionary
+
+                hitBreakPointsIndex = {}
+                for i = 1,#hitBreakPoints do
+                     hitBreakPointsIndex[tostring(getAddress(hitBreakPoints[i][1]))] = i
+                end
+
                 if miscSpeedScreen then
                    ShowSpeedOnScreen() end
                 if miscHealthScreen then
@@ -990,23 +1019,26 @@ function ReattachFP(m)
                    ToggleLimitedLives() end
                 if miscCameraLock then
                    ToggleCameraLock() end
-                else
-                   setProperty(FTrainerMain.CECheckbox13,"Checked",false)
-                   setProperty(FTrainerMain.CECheckbox22,"Checked",false)
-                   setProperty(FTrainerMain.CECheckbox10,"Checked",false)
-                   setProperty(FTrainerMain.CECheckbox16,"Checked",false)
-                   setProperty(FTrainerMain.CECheckbox11,"Checked",false)
-                   setProperty(FTrainerMain.CECheckbox21,"Checked",false)
-                   setProperty(FTrainerMain.CECheckbox12,"Checked",false)
-                   setProperty(FTrainerMain.CECheckbox9,"Checked",false)
-             end
+            else
+               setProperty(FTrainerMain.CECheckbox13,"Checked",false)
+               setProperty(FTrainerMain.CECheckbox22,"Checked",false)
+               setProperty(FTrainerMain.CECheckbox10,"Checked",false)
+               setProperty(FTrainerMain.CECheckbox16,"Checked",false)
+               setProperty(FTrainerMain.CECheckbox11,"Checked",false)
+               setProperty(FTrainerMain.CECheckbox21,"Checked",false)
+               setProperty(FTrainerMain.CECheckbox12,"Checked",false)
+               setProperty(FTrainerMain.CECheckbox9,"Checked",false)
+           end
          end
 
      return 1
 end
 
 --returns currently recognized game version index. 0 means no game recognized.
-function readGameVersion()
+function readGameVersion(folder)
+         if folder then
+             return 3
+         end
          if not isempty(readInteger(varGlobalCycle)) then return 3 end
          return 0
 
@@ -1062,7 +1094,7 @@ end
 function readKeys(sender,filename)
          if isempty(filename) then
             load_dialog = createOpenDialog(self)
-            load_dialog.InitalDir = os.getenv('%USERPROFILE%')
+            load_dialog.InitalDir = ftrainerDirectory
             load_dialog.Title = "Open Key Values File"
             load_dialog.execute()
             f = io.open(load_dialog.FileName)
@@ -1116,7 +1148,7 @@ end
 function saveKeys()
 
          load_dialog = createOpenDialog(self)
-         load_dialog.InitalDir = os.getenv('%USERPROFILE%')
+         load_dialog.InitalDir = ftrainerDirectory
          load_dialog.Title = "Save Key Values File"
          load_dialog.Options = "[ofOverwritePrompt]"
          load_dialog.execute()
@@ -1163,64 +1195,64 @@ HotkeyText = {"DV Boss Room","RM Boss Warp","FN Boss Warp","SB Boss Warp","JC Bo
 HotkeyWarpToggle = 0
 
 function HotkeyWarpToggle1()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          HotkeyWarpToggle = 1
 end
 
 function HotkeyWarpToggle2()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          HotkeyWarpToggle = 2
 end
 function HotkeyWarpToggle3()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          HotkeyWarpToggle = 3
 end
 function HotkeyWarpToggle4()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          HotkeyWarpToggle = 4
 end
 function HotkeyWarpToggle5()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          HotkeyWarpToggle = 5
 end
 function HotkeyWarpToggle6()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          HotkeyWarpToggle = 6
 end
 function HotkeyWarpToggle7()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          HotkeyWarpToggle = 7
 end
 function HotkeyWarpToggle8()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          HotkeyWarpToggle = 8
 end
 function HotkeyWarpToggle9()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          HotkeyWarpToggle = 9
 end
 function HotkeyWarpToggle10()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          HotkeyWarpToggle = 10
 end
 function HotkeyWarpToggle11()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          HotkeyWarpToggle = 11
 end
 function HotkeyWarpToggle12()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          HotkeyWarpToggle = 12
 end
 function HotkeyWarpToggle13()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          HotkeyWarpToggle = 13
 end
 function HotkeyWarpToggle14()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          HotkeyWarpToggle = 14
 end
 function HotkeyWarpToggle15()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          HotkeyWarpToggle = 15
 end
 
@@ -1306,7 +1338,10 @@ function ChangeGameSpeedDown()
          CEComboBox2Change()
 end
 
+--gamepausetrigger is activated with tas commands and is set up to
+--keep the game unpaused at the end
 gamePauseTrigger = false
+gameUnpauseOnInput = false
 --Pauses and unpauses the game, based on playback status
 function GamePause()
          if inputBreakpointIsActive == 0 then
@@ -1369,7 +1404,7 @@ function GamePause()
 end
 
 function ToggleGamePause()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          if inputBreakpointIsActive > 5 then return end
          gamePauseTrigger = true
 end
@@ -1426,7 +1461,7 @@ function frameAdvance()
 end
 
 function FrameAdvanceTrigger()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          if not has_value({1,3,5},inputBreakpointIsActive) then return end
          frameadvancetrigger = 1
 end
@@ -1490,7 +1525,7 @@ function playbackInputs()
          --Attempts to open playback file
          if isempty(playbackFileName) then
             load_dialog = createOpenDialog(self)
-            load_dialog.InitalDir = os.getenv('%USERPROFILE%')
+            load_dialog.InitalDir = ftrainerDirectory
             load_dialog.Title = "Open Playback File"
             load_dialog.execute()
             playbackFileName = load_dialog.FileName
@@ -1518,7 +1553,7 @@ function playbackInputs()
             return
          end
 
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          if inputBreakpointIsActive == 3 then
             local t = fftoggle
             local h = inputPlaybackCommLines
@@ -1557,7 +1592,7 @@ end
 
 --reads custom warp settings from a file
 function ReadCustomWarp(sender,filename)
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          --reset relevant checkboxes
          setProperty(FTrainerMain.CECheckbox2,"Checked",false)
          setProperty(FTrainerTimer.CECheckbox1,"Checked",false)
@@ -1569,7 +1604,7 @@ function ReadCustomWarp(sender,filename)
          setProperty(FTrainerCustom.CECheckbox4,"Checked",false)
          if isempty(filename) then
            load_dialog = createOpenDialog(self)
-           load_dialog.InitalDir = os.getenv('%USERPROFILE%')
+           load_dialog.InitalDir = ftrainerDirectory
            load_dialog.Title = "Open Custom Warp File"
            load_dialog.execute()
            file = io.open(load_dialog.FileName)
@@ -1590,7 +1625,7 @@ function SaveCustomWarp()
             return end
 
          load_dialog = createOpenDialog(self)
-         load_dialog.InitalDir = os.getenv('%USERPROFILE%')
+         load_dialog.InitalDir = ftrainerDirectory
          load_dialog.Title = "Save Custom Warp File"
          setProperty(load_dialog,"Options","[OverwritePrompt]")
          load_dialog.execute()
@@ -1726,7 +1761,7 @@ function inputFileHeader(file,t)
                   if isempty(i[3]) or isempty(i[4]) then return 0 end
                   setProperty(FTrainerMain.BCustomFrame,"Text",i[3])
                   --check if frame value is invalid
-                  if not has_value(arrayFirstFrames,tonumber(i[3])) and not has_value(arrayFollowFrames,tonumber(i[3])) then
+                  if not has_value(arrayFirstFrames,tonumber(i[3])) and not has_value(arrayNextFrames,tonumber(i[3])) then
                      return 0
                   end
                   setProperty(FTrainerMain.BCustomX,"Text",i[4])
@@ -1861,7 +1896,7 @@ function inputFileHeader(file,t)
                --timer stop settings
                  if i[2] == "frame" then
                     if isempty(tonumber(i[3])) then return 0 end
-                    if not has_value(arrayFirstFrames,tonumber(i[3])) and not has_value(arrayFollowFrames,tonumber(i[3])) then
+                    if not has_value(arrayFirstFrames,tonumber(i[3])) and not has_value(arrayNextFrames,tonumber(i[3])) then
                       return 0
                     end
                     setProperty(FTrainerTimer.CEEdit1,"Text",i[3])
@@ -1964,7 +1999,7 @@ end
 
 --Interrupts playback, paused or not
 function playbackStop()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          --stop recording here; write current string to file
          if inputBreakpointIsActive == 4 or inputBreakpointIsActive == 5 then
             setProperty(FTrainerMain.ToolStatus,"Caption","Finished recording " .. inputPlaybackLines .. " frames")
@@ -2010,7 +2045,7 @@ function StartRecording()
          --asks for file
          if isempty(recordingFile) then
             load_dialog = createOpenDialog(self)
-            load_dialog.InitalDir = os.getenv('%USERPROFILE%')
+            load_dialog.InitalDir = ftrainerDirectory
             load_dialog.Title = "Open Playback File"
             load_dialog.execute()
             recordingFile = load_dialog.FileName
@@ -2082,10 +2117,13 @@ function debugger_onBreakpoint()
             return 1
          end
          --if EIP == getAddress("FP.exe") + 0x1877DA then
+         --triggers during fastforward breakpoint and skips rendering.
          if EIP == getAddress("FP.exe")+ 0x1877C9 then
             if has_value({1,3,5},inputBreakpointIsActive) and frameadvancetrigger == 0 then
                EIP = getAddress("FP.exe") + 0x1877FB
             end
+            --here you check if
+            --1. the new toggle is active. just make a
             return 1
          end
          if EIP == getAddress("FP.exe") + 0x188065 then
@@ -2108,6 +2146,7 @@ function debugger_onBreakpoint()
             frameadvancetrigger = 0
             return 1
          end
+
          --testing stuff
          --if EIP == getAddress("FP.exe") + 0x26b6f2 then
          --   setProperty(FTrainerMain.CustomStatus,"Caption",EAX)
@@ -2119,9 +2158,16 @@ function debugger_onBreakpoint()
 
          --pauses for any breakpoint that's not the main one (for other testing)
          --if inputBreakpointIsActive == 2 then print(varInputBreakValue) end
+         -- here you have to update lastObjectHit if the address is in hitBreakPoints
+
+         if not isempty(hitBreakPointsIndex[tostring(EIP)]) then
+             checkHitBreakpoint(EIP,EAX,ECX,EDI)
+             return 1
+         end
          if EIP ~= getAddress("FP.exe") +  varInputBreakValue then
             --if breakpointTestToggle then return BreakpointTestCount()
             --else return 0 end
+
             return updateRNGCounter(EIP - getAddress("FP.exe"))
          end
          --Applies temporary warp if command is done from frame 0
@@ -2295,7 +2341,7 @@ function debugger_onBreakpoint()
                writeDouble(addr2,5 * mult)
             end
             addr2 = addr+0x108
-            --if readDouble(addr2) ~=0 and readDouble(addr2) < 15 * mult then
+            --if readDouble(addr2) ~=0 --[[and readDouble(addr2) < 15 * mult]] then
             writeDouble(addr2,15 * mult)
             --end
             addr2 = addr+0x110
@@ -2414,7 +2460,9 @@ function debugger_onBreakpoint()
                   writeInteger(varLives,4)
                end
             else
-                writeInteger(varLives,150)
+                --if inputBreakpointIsActive == 0 then
+                  --writeInteger(varLives,150)
+                --end
             end
             if miscInvincibility then
                if readDouble(varInvincibility) > 8 then
@@ -2426,9 +2474,9 @@ function debugger_onBreakpoint()
                writeDouble(varKeyCard,9)
             end
             --checks for igt
-            if not isempty(readDouble(varIgt)) then
-               if readDouble(varIgt) < 600000 then writeDouble(varIgt,readDouble(varIgt) + 600000) end
-            end
+            --if not isempty(readDouble(varIgt)) then
+               --if readDouble(varIgt) < 600000 then writeDouble(varIgt,readDouble(varIgt) + 600000) end
+            --end
             return 1
          end
          if inputBreakpointIsActive >= 9 then return 1 end
@@ -2501,7 +2549,7 @@ function applyPostWarp()
             end
 
             --sets dreadbox's drop to be an explosion instead of crystals
-            if (customFrame == 67 or postWarpCode == 9) then
+            if (customFrame == 67 or postWarpCode == 9) and FPVersion == 3 then
                writeDouble(varBoxExplode,9)
             end
             --fixes water level
@@ -2656,28 +2704,28 @@ function PlaybackInputRecord()
 
          if readDouble(varInputUp) == 1000 then
             inputLine = "1 "
-         else inputLine = "0 " end
+        else inputLine = ". " end
          if readDouble(varInputDown) == 1000 then
             inputLine = inputLine .. "1 "
-         else inputLine = inputLine .. "0 " end
+        else inputLine = inputLine .. ". " end
          if readDouble(varInputLeft) == 1000 then
             inputLine = inputLine .. "1 "
-         else inputLine = inputLine .. "0 " end
+        else inputLine = inputLine .. ". " end
          if readDouble(varInputRight) == 1000 then
             inputLine = inputLine .. "1 "
-         else inputLine = inputLine .. "0 " end
+        else inputLine = inputLine .. ". " end
          if readDouble(varInputJump) == 1000 then
             inputLine = inputLine .. "1 "
-         else inputLine = inputLine .. "0 " end
+        else inputLine = inputLine .. ". " end
          if readDouble(varInputAttack) == 1000 then
             inputLine = inputLine .. "1 "
-         else inputLine = inputLine .. "0 " end
+        else inputLine = inputLine .. ". " end
          if readDouble(varInputSpecial) == 1000 then
             inputLine = inputLine .. "1 "
-         else inputLine = inputLine .. "0 " end
+        else inputLine = inputLine .. ". " end
          if readDouble(varInputPause) == 1000 then
             inputLine = inputLine .. "1\n"
-         else inputLine = inputLine .. "0\n" end
+        else inputLine = inputLine .. ".\n" end
 
          inputPlaybackLines = inputPlaybackLines + 1
 
@@ -2693,28 +2741,28 @@ function applyRInputs()
          inputLine = ""
          if getProperty(FTrainerMain.TButtonUp,"Checked") then
             inputLine = "1 "
-         else inputLine = "0 " end
+        else inputLine = ". " end
          if getProperty(FTrainerMain.TButtonDown,"Checked") then
             inputLine = inputLine .. "1 "
-         else inputLine = inputLine .. "0 " end
+        else inputLine = inputLine .. ". " end
          if getProperty(FTrainerMain.TButtonLeft,"Checked") then
             inputLine = inputLine .. "1 "
-         else inputLine = inputLine .. "0 " end
+        else inputLine = inputLine .. ". " end
          if getProperty(FTrainerMain.TButtonRight,"Checked") then
             inputLine = inputLine .. "1 "
-         else inputLine = inputLine .. "0 " end
+        else inputLine = inputLine .. ". " end
          if getProperty(FTrainerMain.TButtonA,"Checked") then
             inputLine = inputLine .. "1 "
-         else inputLine = inputLine .. "0 " end
+        else inputLine = inputLine .. ". " end
          if getProperty(FTrainerMain.TButtonB,"Checked") then
             inputLine = inputLine .. "1 "
-         else inputLine = inputLine .. "0 " end
+        else inputLine = inputLine .. ". " end
          if getProperty(FTrainerMain.TButtonC,"Checked") then
             inputLine = inputLine .. "1 "
-         else inputLine = inputLine .. "0 " end
+        else inputLine = inputLine .. ". " end
          if getProperty(FTrainerMain.TButtonP,"Checked") then
             inputLine = inputLine .. "1\n"
-         else inputLine = inputLine .. "0\n" end
+        else inputLine = inputLine .. ".\n" end
          return inputLine
 end
 
@@ -2851,6 +2899,12 @@ function CEButton13Click()
          UpdateAdvancedDataview()
 end
 
+function CEButton19Click()
+        FTrainerObject.show()
+        setProperty(FTrainerObject.CECheckbox1,"Checked",true)
+        UpdateObjectDataview()
+end
+
 --Updates
 function UpdateAdvancedDataview()
          if ReattachFP(0) == 0 then return end
@@ -2944,17 +2998,221 @@ function UpdateAdvancedDataview()
             setProperty(FTrainerDataview.CELabel12,"Caption","Meter: " .. dataMeter)
             setProperty(FTrainerDataview.CELabel12,"Visible",true)
          else setProperty(FTrainerDataview.CELabel12,"Visible",false) end
-         if not isempty(dataSeed) then
+         if not isempty(dataSeed) and FPVersion ~= 1 then
             setProperty(FTrainerDataview.CELabel13,"Caption","RNG value: " .. dataSeed)
             setProperty(FTrainerDataview.CELabel13,"Visible",true)
          else setProperty(FTrainerDataview.CELabel13,"Visible",false) end
-         if inputPlaybackLines > 0 then
+         if inputPlaybackLines > 0 and FPVersion ~= 1 then
             setProperty(FTrainerDataview.CELabel14,"Caption","Initial RNG value: " .. dataFirstSeed)
             setProperty(FTrainerDataview.CELabel14,"Visible", true)
          else
             setProperty(FTrainerDataview.CELabel14,"Visible", false)
          end
 end
+
+objectDataviewMode = nil
+function changeObjectDataviewIndex()
+    if ReattachFP(0) == 0 then return end
+    objectDataviewMode = getProperty(FTrainerObject.CEComboBox1,"ItemIndex")
+end
+
+--TODO: move all index checks from UpdateObjectDataview to here.
+--updates object dataview offsets
+function UpdateObjectDataviewOffset()
+    if ReattachFP(0) == 0 then return end
+    index =  getProperty(FTrainerObject.CEComboBox1,"ItemIndex")
+    if index == 1 then
+        for _,b in ipairs(hitBreakPoints) do
+            debug_setBreakpoint(b[1])
+        end
+    else
+        for _,b in ipairs(hitBreakPoints) do
+            debug_removeBreakpoint(b[1])
+        end
+    end
+    --disable editing if it's not on the right option.
+    if index == 2 then
+        setProperty(FTrainerObject.EditPointer1,"Enabled",true)
+        setProperty(FTrainerObject.EditPointer2,"Enabled",true)
+        return
+    end
+    --toggle all breakpoints on the list if the option is not last object hit
+
+    setProperty(FTrainerObject.EditPointer1,"Enabled",false)
+    setProperty(FTrainerObject.EditPointer2,"Enabled",false)
+    --player object
+    if index == 3 then
+        setProperty(FTrainerObject.EditPointer1,"Text","1ba8")
+        setProperty(FTrainerObject.EditPointer2,"Text",nil)
+    end
+    --camera object
+    if index == 4 then
+        setProperty(FTrainerObject.EditPointer1,"Text","2b48")
+        setProperty(FTrainerObject.EditPointer2,"Text",nil)
+    end
+    -- updates object dataview immediately, to show the change.
+    -- QUESTION: maybe not a good idea?
+    UpdateObjectDataview()
+
+end
+
+
+-- updates object dataview values
+lastObjectHit = nil
+lastObject = nil
+-- this array records which attribute values are going to be visible.
+lastObjectAttr = {}
+lastObjectAttrColor = {}
+for i=1, 27 do lastObjectAttr[i] = false end
+for i=1, 28 do lastObjectAttrColor[i] = false end
+listSizeModifier = 15.3
+
+--sets lastObjectHit
+function checkHitBreakpoint(EIP,EAX,ECX,EDI)
+        --reads reverse index to check what was the address that caused the function call.
+        i = hitBreakPointsIndex[tostring(EIP)]
+        local objectHit = lastObjectHit
+
+        --reads affected register and updates last object hit pointer.
+        if hitBreakPoints[i][2] == "eax" then
+            lastObjectHit = EAX
+        end
+        if hitBreakPoints[i][2] == "ecx" then
+            lastObjectHit = ECX
+        end
+        if hitBreakPoints[i][2] == "edi" then
+            lastObjectHit = EDI
+        end
+        if hitBreakPoints[i][2] == "esi" then
+            lastObjectHit = ESI
+        end
+        -- updates object dataview immediately, to show the change.
+        if lastObjectHit ~= objectHit then
+            for i=1, 27 do lastObjectAttr[i] = false end
+            UpdateObjectDataview()
+        end
+        return
+end
+
+function UpdateObjectDataview()
+    if ReattachFP(0) == 0 then return end
+index = getProperty(FTrainerObject.CEComboBox1,"ItemIndex")
+    obj = nil
+    if index == 0 then
+        obj = lastObject
+    end
+    if index == 1 then
+        obj = lastObjectHit
+    else
+        if index ~= 0 then
+            -- TODO: refresh the object dataview here
+            if isempty(getProperty(FTrainerObject.EditPointer2,"Text")) then
+
+                obj = "[" .. varBase .. "]+" .. getProperty(FTrainerObject.EditPointer1,"Text")
+            else
+                obj = "[[" .. varBase .. "]+" .. getProperty(FTrainerObject.EditPointer1,"Text") .. "]+" .. getProperty(FTrainerObject.EditPointer2,"Text")
+            end
+            obj = readInteger(obj)
+            if obj ~= lastObject then
+                for i=1, 27 do lastObjectAttr[i] = false end
+            end
+        end
+    end
+    if isempty(obj) or isempty(readDouble(obj+0x14)) then
+        setProperty(FTrainerObject.CELabel4,"Caption",nil)
+    else
+        setProperty(FTrainerObject.CELabel4,"Caption",string.format("Object: %x", obj))
+    end
+    lastObject = obj
+    UpdateObjectDataview1(obj)
+end
+
+--fills up the listbox on the object dataview form with values found in the given array.
+function UpdateObjectDataview1(obj)
+        if isempty(obj) or isempty(readDouble(obj+0x14)) then
+            -- when the pointer is invalid for some reason. you have to either make the table invisible or give the red color for the caption.
+            setProperty(FTrainerObject.CEListBox1,"Enabled",false)
+        else
+            --if the pointer is valid, go through all values and update them. a loop that starts on f0 and reads doubles up until 1b8 is enough. and then 1c0 is an int
+            setProperty(FTrainerObject.CEListBox1,"Enabled",true)
+            S = FTrainerObject.CEListBox1.getItems()
+            --S = FTrainerObject.CEListBox2.getItems()
+            S.beginUpdate()
+            S.clear()
+            -- read positions X and Y.
+            -- always assume these are readable?
+            addr = obj + 0xa0
+            addr1 = obj + 0xa8
+            val = readInteger(addr)
+            val1 = readInteger(addr1)
+            if val > 2^31 then
+                val = val - 2^32
+            end
+            if val1 > 2^31 then
+                val1 = val1 - 2^32
+            end
+
+            --quick check to see if the values are short ints
+            if math.abs(val) > 2^16 or math.abs(val1) > 2^16 then
+                setProperty(FTrainerObject.CEListBox1,"Enabled",false)
+                return
+            end
+            str = "Pos. X : " .. string.format("%d",val) .. " : " .. string.format("%d",val1)
+            --S.setString(0,str)
+            S.add(str)
+            addr = obj + 0xa4
+            addr1 = obj + 0xac
+            val = readInteger(addr)
+            val1 = readInteger(addr1)
+            if val > 2^31 then
+                val = val - 2^32
+            end
+            if val1 > 2^31 then
+                val1 = val1 - 2^32
+            end
+            str = "Pos. Y : " .. string.format("%d",val) .. " : " .. string.format("%d",val1)
+            --S.setString(1,str)
+            S.add(str)
+            i = 3
+            b = readInteger(obj+0x14) + 0xf0
+            while i < 29 do
+                str = tostring(i-2) .. " : "
+                if i - 2 < 10 then
+                    str = "0" .. str
+                end
+                str = "Attr. " .. str
+                val = readDouble(b)
+                if (not isempty(val) and val ~= 0) or lastObjectAttr[i-2] then
+                    --TODO: here you have to update lastObjectAttr alongside the string.
+                    lastObjectAttr[i-2] = true
+                    str = str .. tostring(Round3(val))
+                    --S.setString(i-1,str)
+                    S.add(str)
+                end
+                b = b + 0x8
+                i = i + 1
+            end
+            str = "Attr. 27 : "
+            addr = readInteger(obj) + 0x1c0
+            val = readInteger(addr)
+            if not isempty(val) and val ~= 0 then
+                str = str .. tostring(val)
+                --S.setString(28,str)
+                S.add(str)
+            end
+            --update the form's size and position of buttons alongside the listbox update.
+            n = S.Count
+            m = getProperty(FTrainerObject.CEListBox1, "Top") + (n * listSizeModifier)
+            --adjust the bottom objects properties to the itembox's size
+            setProperty(FTrainerObject.CEListBox1,"Height", n * listSizeModifier)
+            setProperty(FTrainerObject.CEButton1, "Top", 22 + m)
+            setProperty(FTrainerObject.CECheckbox1, "Top", 59 + m)
+            setProperty(FTrainerObject,"Height", 82 + m)
+            setProperty(FTrainerObject.CEListBox1,"Items",S)
+            S.endUpdate()
+        end
+end
+
 
 function FormClose()
          setProperty(FTrainerDataview.CECheckbox1,"Checked",false)
@@ -3038,7 +3296,7 @@ end
 
 --Copies current game's rng value into the field
 function CurrentRNGValue()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          setProperty(FTrainerCalc.CEEdit1,"Text",readInteger(varBossSeed))
 end
 
@@ -3152,7 +3410,7 @@ end
 
 --toggles permanent keycards
 function ToggleKeycard()
-         if ReattachFP(0) == 0 then
+         if ReattachFP(0) == 0 or FPVersion ~= 3 then
             setProperty(FTrainerMain.CECheckbox22,"Checked",false)
             return
          end
@@ -3189,7 +3447,7 @@ end
 
 miscLivesDisplay = false
 function ToggleLivesDisplay()
-         if ReattachFP(1) == 0 then
+         if ReattachFP(0) == 0 or FPVersion ~= 3 then
             setProperty(FTrainerMain.CECheckbox20,"Checked",false)
             return
          end
@@ -3202,7 +3460,7 @@ end
 
 --toggles superdog mode: fest
 function ToggleSuperdog()
-         if ReattachFP(1) == 0 then
+         if ReattachFP(0) == 0 or FPVersion ~= 3 then
             setProperty(FTrainerMain.CECheckbox10,"Checked",false)
             return
          end
@@ -3320,7 +3578,7 @@ end
 
 --Explodes randomly depending on RNG
 function ToggleRandomExplode()
-         if ReattachFP(1) == 0 then
+         if ReattachFP(0) == 0 or FPVersion ~= 3 then
             setProperty(FTrainerMain.CECheckbox9,"Checked",false)
             return
          end
@@ -3329,7 +3587,7 @@ end
 
 --Instant Death yay
 function ToggleInstantDeath()
-         if ReattachFP(1) == 0 then
+         if ReattachFP(0) == 0 or FPVersion ~= 3 then
             setProperty(FTrainerMain.CECheckbox11,"Checked",false)
             return
          end
@@ -3391,7 +3649,7 @@ function ToggleInstantDeath()
 end
 
 function ToggleLimitedLives()
-         if ReattachFP(0) == 0 then
+         if ReattachFP(0) == 0 or FPVersion ~= 3 then
             setProperty(FTrainerMain.CECheckbox12,"Checked",false)
             return
          end
@@ -3414,7 +3672,7 @@ end
 
 
 function ToggleCameraLock()
-         if ReattachFP(1) == 0 then
+         if ReattachFP(0) == 0 or FPVersion ~= 3 then
             setProperty(FTrainerMain.CECheckbox13,"Checked",false)
             return
          end
@@ -3490,7 +3748,7 @@ miscSpeedScreenDisplay2 = 3
 
 
 function ShowSpeedOnScreen()
-         if ReattachFP(1) == 0 then
+         if ReattachFP(0) == 0 or FPVersion ~= 3 then
             setProperty(FTrainerMain.CECheckbox13,"Checked",false)
             return
          end
@@ -3818,7 +4076,7 @@ end
 
 miscHud = false
 function MiscHUD()
-         if ReattachFP(1) == 0 then
+         if ReattachFP(0) == 0 or FPVersion ~= 3 then
             setProperty(FTrainerMain.CECheckbox15,"Checked",false)
             return
          end
@@ -3831,7 +4089,7 @@ end
 miscMovement = false
 
 function ToggleMiscMovement()
-         if ReattachFP(1) == 0 then
+         if ReattachFP(0) == 0 or FPVersion ~= 3 then
             setProperty(FTrainerMain.CECheckbox16,"Checked",false)
             return
          end
@@ -4214,25 +4472,6 @@ function ToggleMiscMovement()
                divsd xmm0,[FP.exe+12C35D0] //=200
                addsd xmm0,[fp.exe+12E4658] //=0.2
                jmp exitmovement26
-
-               //lilac cyclone gravity change
-               alloc(movement27,128)
-               label(exitmovement27)
-               "fp.exe"+260B48:
-               jmp movement27
-               nop
-               nop
-               nop
-               exitmovement27:
-               movement27:
-               movsd xmm2,[FP.exe+1488F80] //orbs
-               mulsd xmm2,[fp.exe+12BEAD0] //=4
-               addsd xmm2,[FP.exe+1488F58] //crystals
-               mulsd xmm2,[fp.exe+12E4958] //=0.15
-               divsd xmm2,[FP.exe+12C35D0] //=200
-               addsd xmm2,[fp.exe+12E4958] //=0.15
-               subsd xmm0,xmm2
-               jmp exitmovement27
             ]])
          else
             autoAssemble([[
@@ -4300,9 +4539,6 @@ function ToggleMiscMovement()
                dealloc(movement26)
                "fp.exe"+26E381:
                movsd xmm0,[fp.exe+12E4658]
-               dealloc(movement26)
-               "fp.exe"+260B48:
-               subsd xmm0,[fp.exe+12E4958]
             ]])
             --undoes numbers changes
             local addr = readInteger(varAVs)
@@ -4348,7 +4584,7 @@ end
 miscHealthScreen = false
 
 function ShowHealthOnScreen()
-         if ReattachFP(1) == 0 then
+         if ReattachFP(0) == 0 or FPVersion ~= 3 then
             setProperty(FTrainerMain.CECheckbox16,"Checked",false)
             return
          end
@@ -4499,7 +4735,7 @@ end
 
 --toggle to remove invincibility from moves
 function ToggleInvincibility()
-         if ReattachFP(0) == 0 then
+         if ReattachFP(0) == 0 or FPVersion ~=3 then
             miscInvincibility = false
             setProperty(FTrainerMain.CECheckbox21,"Checked",false)
             return
@@ -4584,7 +4820,7 @@ miscTimerPB = false
 
 --Activates timer stop according to first checkbox
 function ActivateTimerStop()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          miscTimerStop = getProperty(FTrainerTimer.CECheckbox1,"Checked")
          UpdateTimerStop()
 end
@@ -4611,7 +4847,7 @@ end
 
 --The following 3 functions update timer stop variables according to the parameters
 function UpdateCurrentTimerFrame()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          local x = readInteger(varFrame)
          if isempty(x) then return end
          valTimerFrame = x
@@ -4621,7 +4857,7 @@ function UpdateCurrentTimerFrame()
 end
 
 function UpdateCurrentTimerPosX()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          local x = readDouble(varTrueX)
          if isempty(x) then return end
          valTimerPosX = x
@@ -4631,7 +4867,7 @@ function UpdateCurrentTimerPosX()
 end
 
 function UpdateCurrentTimerFlag()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          local x = readDouble(varCheckFlag)
          if isempty(x) then return end
          valTimerFlag = x
@@ -4642,7 +4878,7 @@ end
 
 --sets up timer limit.
 function UpdateTimerLimit()
-         if ReattachFP(1) == 0 then return end
+         if ReattachFP(0) == 0 then return end
          miscTimerLimit = getProperty(FTrainerTimer.CECheckbox6,"Checked")
          miscTimerPB = getProperty(FTrainerTimer.CECheckbox7,"Checked")
          local x = getProperty(FTrainerTimer.CEEdit5,"Text")
@@ -4666,12 +4902,17 @@ function UpdateTimerLimit()
          if valTimerLimit > 600000 then valTimerLimit = valTimerLimit - 600000 end
 end
 
+-- functions for the object dataview.
+function RefreshObjectDataview()
+
+end
+
 --opens form
 function OpenTimerWindow()
          FTrainerTimer.show()
 end
 
-ReattachFP(0)
+ReattachFP(1)
 
 
 --personal thing
